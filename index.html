@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jogo Interativo</title>
+    <title>Clique aqui Maria Luiza</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
     <style>
         body, html {
@@ -21,53 +21,46 @@
         let initialMessageTime = 7;
         let volumeYes = 70; // Volume inicial do 'SIM' em porcentagem
         let volumeNo = 30;  // Volume inicial do 'NÃO'
+        let gameStarted = false;
 
         function setup() {
             createCanvas(windowWidth, windowHeight);
             textAlign(CENTER, CENTER);
-            textSize(24);
             frameRate(30);
 
             for (let i = 0; i < 50; i++) {
                 emojis.push(new Emoji());
             }
-
-            setTimeout(() => {
-                initialMessageTime = 0; // Termina o tempo da mensagem inicial
-                setInterval(() => {
-                    if (timer > 0) timer--;
-                }, 1000); // Começa a contar depois de 7 segundos
-            }, 7000);
         }
 
         function draw() {
             background(0);
 
-            if (initialMessageTime > 0) {
+            if (!gameStarted) {
                 fill(255);
+                textSize(min(width, height) / 20);
+                text("CLIQUE PARA COMEÇAR", width / 2, height / 2);
+            } else if (initialMessageTime > 0) {
+                fill(255);
+                textSize(min(width, height) / 25);
                 text("VOCÊ ENTROU AQUI E NÃO PODERÁ SAIR ATÉ RESPONDER A PRÓXIMA PERGUNTA,\nCASO CONTRÁRIO, SEU CELULAR VAI EXPLODIR", width / 2, height / 2);
                 emojis.forEach(emoji => {
                     emoji.move();
                     emoji.display();
                 });
-            } else if (timer > 0) {
-                drawTimer();
-                drawFluidButtons();
             } else if (showQuestion) {
                 fill(255);
-                textSize(32);
-                text("ME LIBERA?", width / 2, height * 0.2);
+                textSize(min(width, height) / 15);
+                text("ME LIBERA?", width / 2, height * 0.15);
+                drawTimer();
                 drawFluidButtons();
             }
         }
 
         function drawTimer() {
             fill(timer % 2 == 0 ? color(255, 0, 0) : color(255));
-            textSize(16);
+            textSize(min(width, height) / 30);
             text(`00:${timer < 10 ? '0' + timer : timer} 💣`, width / 2, height * 0.05);
-            if (timer === 0) {
-                showQuestion = true;
-            }
         }
 
         function drawFluidButtons() {
@@ -82,8 +75,8 @@
             fill('#FF0000');
             rect(0, height * 0.3 + height * 0.7 * (volumeYes / 100), width, height * 0.7 * (volumeNo / 100)); // Área do NÃO
 
-            let textSizeYes = 32 * (volumeYes / 70); // Ajusta o tamanho do texto baseado no volume
-            let textSizeNo = 32 * (volumeNo / 30); // Ajusta o tamanho do texto baseado no volume
+            let textSizeYes = min(width, height) / 15 * (volumeYes / 70); // Ajusta o tamanho do texto baseado no volume
+            let textSizeNo = min(width, height) / 15 * (volumeNo / 30); // Ajusta o tamanho do texto baseado no volume
             textSize(textSizeYes);
             fill(255);
             text('SIM', width / 2, height * 0.3 + height * 0.35 * (volumeYes / 100)); // Texto do SIM
@@ -92,15 +85,29 @@
         }
 
         function mousePressed() {
-            if (mouseY > height * 0.3 && mouseY < height * 0.3 + height * 0.7 * (volumeYes / 100)) {
-                window.open('https://youtu.be/MqdlE7BIpnE', '_blank'); // Abre o vídeo em uma nova aba
-            }
-            if (mouseY > height * 0.3 + height * 0.7 * (volumeYes / 100) && mouseY < height) {
-                volumeNo -= 5;
-                volumeYes += 5;
-                if (volumeNo <= 0) {
-                    volumeNo = 0;
-                    volumeYes = 100;
+            if (!gameStarted) {
+                gameStarted = true;
+                let fs = fullscreen();
+                fullscreen(!fs);
+
+                setTimeout(() => {
+                    initialMessageTime = 0; // Termina o tempo da mensagem inicial
+                    showQuestion = true; // Exibe a pergunta assim que o tempo inicial acabar
+                    setInterval(() => {
+                        if (timer > 0) timer--;
+                    }, 1000); // Começa a contar depois de 7 segundos
+                }, 7000);
+            } else if (showQuestion) {
+                if (mouseY > height * 0.3 && mouseY < height * 0.3 + height * 0.7 * (volumeYes / 100)) {
+                    window.open('https://youtu.be/MqdlE7BIpnE', '_blank'); // Abre o vídeo em uma nova aba
+                }
+                if (mouseY > height * 0.3 + height * 0.7 * (volumeYes / 100) && mouseY < height) {
+                    volumeNo -= 5;
+                    volumeYes += 5;
+                    if (volumeNo <= 0) {
+                        volumeNo = 0;
+                        volumeYes = 100;
+                    }
                 }
             }
         }
@@ -118,7 +125,7 @@
             };
 
             this.display = function() {
-                textSize(32);
+                textSize(min(width, height) / 20);
                 text('👌', this.x, this.y);
             };
         }
