@@ -18,7 +18,7 @@
         let emojis = [];
         let timer = 30;
         let showQuestion = false;
-        let initialMessageTime = 7;
+        let initialMessageTime = 3;
         let volumeYes = 70; // Volume inicial do 'SIM' em porcentagem
         let volumeNo = 30;  // Volume inicial do 'NÃO'
         let gameStarted = false;
@@ -39,11 +39,11 @@
             if (!gameStarted) {
                 fill(255);
                 textSize(min(width, height) / 20);
-                text("CLIQUE PARA COMEÇAR", width / 2, height / 2);
+                text("OI, GOSTOSA. CLICA AQUI PARA COMEÇAR", width / 2, height / 2);
             } else if (initialMessageTime > 0) {
                 fill(255);
                 textSize(min(width, height) / 25);
-                text("VOCÊ ENTROU AQUI E NÃO PODERÁ SAIR ATÉ RESPONDER A PRÓXIMA PERGUNTA,\nCASO CONTRÁRIO, SEU CELULAR VAI EXPLODIR", width / 2, height / 2);
+                text("RESPONDA... OU SEU CELULAR IRÁ EXPLODIR", width / 2, height / 2);
                 emojis.forEach(emoji => {
                     emoji.move();
                     emoji.display();
@@ -51,7 +51,7 @@
             } else if (showQuestion) {
                 fill(255);
                 textSize(min(width, height) / 15);
-                text("ME LIBERA?", width / 2, height * 0.15);
+                text("ME LIBERA O CUZINHO? 🥺", width / 2, height * 0.15);
                 drawTimer();
                 drawFluidButtons();
             }
